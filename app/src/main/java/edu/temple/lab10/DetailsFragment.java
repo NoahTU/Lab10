@@ -1,11 +1,13 @@
 package edu.temple.lab10;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -29,6 +31,13 @@ public class DetailsFragment extends Fragment {
     TextView textView;
 
     View RootView;
+    ImageView ImageView;
+
+    String name= "";
+    String price= "";
+    String sy= "";
+
+    Context te;
 
     public static DetailsFragment newInstance() {
         return new DetailsFragment();
@@ -44,29 +53,31 @@ public class DetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         RootView= inflater.inflate(R.layout.fragment_details, container, false);
 
+        ImageView= (ImageView) RootView.findViewById(R.id.imageView);
+
         textView=  (TextView)RootView.findViewById(R.id.details);
+
+        /*new DownloadImageTask((ImageView) RootView.findViewById(R.id.imageView)).execute("https://finance.google.com/finance/getchart?p=5d&q="+sy);
+        textView.setText(name+"\n$"+price);*/
+
         return RootView;
     }
 
-    void setMessage(String message, int ppos) throws JSONException {
+    void setMessage(String message, int ppos, Context c) throws JSONException {
 
         System.out.println("End?: "+message);
-        //textView.setText(message);
-        /*while(!readFromFile().equals("[")){
-            System.out.println("BLANK");
-        }*/
-        int test=0;
-        while(test<1000){
-            System.out.println("FINAL #"+test+": " + readFromFile());
-            test++;
-        }
+
+        te=c;
 
 
         JSONArray jarray = new JSONArray(readFromFile());
         JSONObject company = (JSONObject) jarray.get(ppos);
-        String name= company.optString("Name");
+        name= company.optString("Name");
+        price= company.optString("LastPrice");
+        sy= company.optString("Symbol");
 
-        textView.setText(name);
+        new DownloadImageTask(ImageView).execute("https://finance.google.com/finance/getchart?p=5d&q="+sy);
+        textView.setText(name+"\n$"+price);
 
 
         //json functions
@@ -111,7 +122,7 @@ public class DetailsFragment extends Fragment {
         String ret = "";
 
         try {
-            InputStream inputStream = getContext().openFileInput("config.txt");
+            InputStream inputStream = te.openFileInput("config.txt");
 
             if ( inputStream != null ) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);

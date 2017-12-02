@@ -2,10 +2,19 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#9acaff">
+    android:background="#00bfff">
+    <ImageView
+        android:adjustViewBounds="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
     <TextView android:layout_width="match_parent" android:layout_height="match_parent"
         android:text="Details of items selected from\nthe navigation fragment\nwould go here.\nIt should have a default display."
-        android:id="@+id/details"/>
+        android:id="@+id/details"
+        android:layout_below="@+id/imageView" />
 
 
 </FrameLayout>

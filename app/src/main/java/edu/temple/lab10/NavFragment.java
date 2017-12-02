@@ -35,6 +35,7 @@ public class NavFragment extends Fragment {
 
     TextView mTextView;
 
+    RefreshService RS= new RefreshService();
     NavInterface activty;
 
     //LIST OF ARRAY STRINGS WHICH WILL SERVE AS LIST ITEMS
@@ -150,6 +151,7 @@ public class NavFragment extends Fragment {
                                         System.out.println(userInput.getText());
                                         //lv.add(userInput.getText());
                                         listItems.add(userInput.getText().toString());
+                                        RS.setSymbol(listItems);
                                         Bundle bundle = new Bundle();
 
                                         //*bundle.putString("newStock", userInput.getText().toString());
@@ -197,7 +199,9 @@ public class NavFragment extends Fragment {
 
                         System.out.println("What was picked: "+ChoreString);
                         try {
+                            System.out.println("position: "+position);
                             activty.acceptMessage(ChoreString, position);
+                            //System.out.println("position: "+position);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

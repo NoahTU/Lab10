@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavFragment.NavIn
 
     boolean twoPanes;
 
-    final Context context = this;
+    final Context con = this;
     private Button button;
     private EditText result;
 
@@ -44,8 +44,10 @@ public class MainActivity extends AppCompatActivity implements NavFragment.NavIn
     //LIST OF ARRAY STRINGS WHICH WILL SERVE AS LIST ITEMS
     ArrayList<String> listItems=new ArrayList<String>();
 
+    Handler mHandler = new Handler();
     NavFragment nav = new NavFragment();
     FragmentManager fragmentManager = getFragmentManager();
+    DetailsFragment dets = new DetailsFragment();
 
     //DEFINING A STRING ADAPTER WHICH WILL HANDLE THE DATA OF THE LISTVIEW
     ArrayAdapter<String> adapter;
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavFragment.NavIn
          *  and load fragment if true.
          */
         if (twoPanes){
-            DetailsFragment dets = new DetailsFragment();
+            dets = new DetailsFragment();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.add(R.id.fragment_details, dets);
             fragmentTransaction.commit();
@@ -112,27 +114,47 @@ public class MainActivity extends AppCompatActivity implements NavFragment.NavIn
         startService(stockQuoteIntent);
 
         System.out.println("Mark: "+listItems.isEmpty());
-        if(!listItems.isEmpty()) {
+
             System.out.println("LOOP IS ENABLED");
-            ha.postDelayed(new Runnable() {
+            /*ha.postDelayed(new Runnable() {
 
                 @Override
                 public void run() {
-                    //call function
-                    try {
-                        PrintWriter writer = new PrintWriter("config.txt");
-                        writer.print("");
-                        writer.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    // should be loop for every 60 seconds, don't forget if null
-                    RS.setSymbol(listItems);
 
-                    ha.postDelayed(this, 60000);
+                    // should be loop for every 60 seconds, don't forget if null
+                    if(!listItems.isEmpty()) {
+                        RS.setSymbol(listItems);
+                        System.out.println("Updated");
+                    }
+                    ha.postDelayed(this, 20000);
                 }
-            }, 60000);
-        }
+            }, 20000);*/
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                while (true) {
+                    try {
+                        Thread.sleep(30000);
+                        mHandler.post(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // TODO Auto-generated method stub
+                                System.out.println("list items: "+listItems);
+                                RS.setSymbol(listItems);
+                                System.out.println("Updated");
+                                // Write your code here to update the UI.
+                            }
+                        });
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                }
+            }
+        }).start();
+
 
         /*File root = new File(Environment.getExternalStorageDirectory(), "Notes");
         if (!root.exists()) {
@@ -294,9 +316,11 @@ public class MainActivity extends AppCompatActivity implements NavFragment.NavIn
             //Intent stockQuoteIntent = new Intent(MainActivity.this, RefreshService.class);
             //stockQuoteIntent.putStringArrayListExtra("stock_symbols", listItems);
             System.out.println("THE MARK 3");
-            //startService(stockQuoteIntent);
-            RS.setSymbol(listItems);
-            receiver.setMessage(message, pos);
+            //S.setSymbol(listItems);
+            receiver.setMessage(message, pos, con);
+        }
+        else{
+            dets.setMessage(message, pos, con);
         }
     }
 

@@ -33,7 +33,7 @@ public class RefreshService extends IntentService {
 
     public void setSymbol(ArrayList<String> s) {
         this.symbol = s;
-        System.out.println("THE MARK 5");
+        //System.out.println("THE MARK 5");
         getQuote(symbol);
 
     }
@@ -73,7 +73,7 @@ public class RefreshService extends IntentService {
                             //writeToFile("[");
                             //System.out.println("WROTE 1");
                         }
-                        System.out.println("Current Symbol" + symbol.get(i).toUpperCase());
+                        System.out.println("Current Symbol: " + symbol.get(i).toUpperCase());
 
                         stockQuoteUrl = new URL("http://dev.markitondemand.com/MODApis/Api/v2/Quote/json/?symbol=" + symbol.get(i).toUpperCase());
 
@@ -125,9 +125,10 @@ public class RefreshService extends IntentService {
             File mFolder = new File("/data/user/0/edu.temple.lab10/files");
             File imgFile = new File(mFolder.getAbsolutePath() + "/config.txt");
 
-            FileOutputStream fOut = new FileOutputStream(imgFile);
+            FileOutputStream fOut = new FileOutputStream(imgFile, false);/// may have to delete false
             OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-            myOutWriter.append(data);
+            //myOutWriter.append(data);
+            myOutWriter.write(data);
 
             myOutWriter.close();
 
