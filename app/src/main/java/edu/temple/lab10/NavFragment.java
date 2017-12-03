@@ -88,12 +88,11 @@ public class NavFragment extends Fragment {
                 for (int i = 0; i < jarray.length(); i++) {
                     JSONObject sym = (JSONObject) jarray.get(i);
                     temp= sym.optString("Symbol");
-                    //System.out.println("Current Temp: "+temp);
-                    //System.out.println("LOADING: "+listItems.contains(temp.toLowerCase()));
+
                     System.out.println("LOADING2: "+listItems.contains(temp));
-                    //System.out.println("LOADING3: "+listItems.contains(temp.toUpperCase()));
+
                     if (listItems.contains(temp.toLowerCase())) {
-                        //listItems.add(temp);
+
                     }
                     else if(listItems.contains(temp.toUpperCase())){
 
@@ -106,7 +105,7 @@ public class NavFragment extends Fragment {
                         activty.updateL(temp);
                     }
                 }
-                //System.out.println("Nav's array: "+listItems);
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -114,18 +113,7 @@ public class NavFragment extends Fragment {
 
 
         adapter=new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, listItems);
-        /*ns = getArguments().getString("newStock");
-        if (!ns.equals(null)&&!ns.equals("")){
-            listItems.add(ns);
-            adapter.notifyDataSetChanged();
-        }
-        else if(ns.equals("")){
-            System.out.println("ns is null");
-        }
-        else{
-            System.out.println("ns is null");
-        }*/
-        //listItems.add(ns);
+
         View view=inflater.inflate(R.layout.fragment_nav, container, false);
        // mTextView = (TextView) view.findViewById(R.id.textView1);
 
@@ -134,8 +122,6 @@ public class NavFragment extends Fragment {
         FloatingActionButton myFab = (FloatingActionButton) (view.findViewById(R.id.floatingActionButton));
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //Toast.makeText(v, "Please fill out all fields.", Toast.LENGTH_SHORT).show();
-                //System.out.println("Action button works");
 
                 // get prompts.xml view
                 LayoutInflater li = LayoutInflater.from(getContext());
@@ -156,27 +142,12 @@ public class NavFragment extends Fragment {
                         .setPositiveButton(R.string.ok,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
-                                        // get user input and set it to result
-                                        // edit text
-                                        //result.setText(userInput.getText());
+
                                         System.out.println(userInput.getText());
-                                        //lv.add(userInput.getText());
                                         listItems.add(userInput.getText().toString());
                                         activty.updateL(userInput.getText().toString());
                                         RS.setSymbol(listItems);
                                         writeToFile(listItems.toString());
-                                        Bundle bundle = new Bundle();
-
-                                        //*bundle.putString("newStock", userInput.getText().toString());
-
-                                        // set Fragmentclass Arguments
-                                        //*NavFragment fragobj = (NavFragment) getFragmentManager().findFragmentById(R.id.fragment_nav);
-
-                                        //fragobj.getArguments().putString("newStock", userInput.getText().toString());
-
-                                        //fragobj.setUpLayout();
-
-                                       //* fragobj.setArguments(bundle);
                                         adapter.notifyDataSetChanged();
                                     }
                                 })
@@ -250,9 +221,6 @@ public class NavFragment extends Fragment {
             fOut.flush();
             fOut.close();
 
-            /*FileOutputStream outputStreamWriter = this.openFileOutput("config.txt", Context.MODE_PRIVATE);
-            outputStreamWriter.write(data);
-            outputStreamWriter.close();*/
         } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }

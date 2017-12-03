@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -45,34 +46,19 @@ public class RefreshService extends IntentService {
 
     public void setSymbol(List s) {
         symbol = s;
-        //System.out.println("THE MARK 5");
         getQuote(symbol);
 
     }
 
     public void settSymbol(List s) {
         symbol = s;
-        //System.out.println("THE MARK 5");
         gettQuote(symbol);
-
-    }
-    public void go() {
-        System.out.println("Currently in RS: "+symbol);
-        getQuote(symbol);
-        //System.out.println("THE MARK 5");
-        // getQuote(symbol);
 
     }
 
     public void setter(List s) {
         symbol = s;
         System.out.println("THE LIST Items: "+symbol);
-        //System.out.println("THE MARK 5");
-       // getQuote(symbol);
-
-    }
-    public List getterSymbol() {
-        return symbol;
 
     }
 
@@ -93,8 +79,6 @@ public class RefreshService extends IntentService {
                 while (true) {
                     try {
                         System.out.println("LOOP Running");
-                        //System.out.println("What you COULD BE WRITING: "+readFromFile());
-                        //final List te= readFromFile().toL
                         Thread.sleep(60000);
                         String s1=readFromFile();
                         System.out.println("What's RUNNING: "+s1);
@@ -113,15 +97,10 @@ public class RefreshService extends IntentService {
                                 // TODO Auto-generated method stub
                                 System.out.println("list item: "+myList);
 
-                                //System.out.println("list itemS: "+);
-                                //System.out.println("Currently in RS: "+RS.getterSymbol());
-                                //RS.setSymbol(RS.getterSymbol());
                                 settSymbol(myList);
                                 // go();
                                 //RS.timedL();
                                 System.out.println("Updated");
-                                //Toast.makeText(getApplicationContext(), getString(R.string.up), Toast.LENGTH_SHORT).show();
-                                // Write your code here to update the UI.
                             }
                         });
                     } catch (Exception e) {
@@ -134,12 +113,6 @@ public class RefreshService extends IntentService {
         return refreshBinder;
     }
 
-    public void timedL() {
-
-        //System.out.println("THE MARK 5");
-        getQuote(symbol);
-
-    }
 
     public RefreshService() {
 
@@ -150,18 +123,12 @@ public class RefreshService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        //go through file and get jobject symbols
-
-        //String[] array=intent.getStringArray("stock_symbol");
         System.out.println("THE MARK 2");
         getQuote(intent.getStringArrayListExtra("stock_symbol"));
     }
 
 
     public void gettQuote(final List symbol) {
-
-        //URL stockQuoteUrl;
-        //System.out.println("THE MARK 1");
 
         writeToFile("[");
         Thread t = new Thread() {
@@ -179,14 +146,11 @@ public class RefreshService extends IntentService {
                         if (i == 0) {
                             System.out.println("Current Symbol: " + symbol.get(i).toString().toUpperCase());
                             t=symbol.get(i).toString().toUpperCase();
-                            //writeToFile("[");
-                            //System.out.println("WROTE 1");
                         }
                         else{
                             System.out.println("Current Symbol: " + symbol.get(i).toString().toUpperCase().substring(1));
                             t=symbol.get(i).toString().toUpperCase().substring(1);
                         }
-                        //System.out.println("Current Symbol: " + symbol.get(i).toString().toUpperCase().substring(1));
 
                         stockQuoteUrl = new URL("http://dev.markitondemand.com/MODApis/Api/v2/Quote/json/?symbol=" + t);
 
@@ -219,25 +183,30 @@ public class RefreshService extends IntentService {
                 }
                 finalresponse=finalresponse+"]";
                 System.out.println("What it should be: "+finalresponse);
+
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                getString(R.string.up),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+
                 writeToFile(finalresponse);
-                //System.out.println("WROTE 2");
 
-
-                //
             }
         };
         t.start();
 
-        //writeToFile("]");
-        //System.out.println("FINAL:" + readFromFile());
 
     }
 
 
     public void getQuote(final List symbol) {
 
-        //URL stockQuoteUrl;
-        //System.out.println("THE MARK 1");
 
         writeToFile("[");
         Thread t = new Thread() {
@@ -250,11 +219,7 @@ public class RefreshService extends IntentService {
                 for (int i = 0; i < symbol.size(); i++) {
 
                     try {
-                        //System.out.println(symbol[i]);
-                        if (i == 0) {
-                            //writeToFile("[");
-                            //System.out.println("WROTE 1");
-                        }
+
                         System.out.println("Current Symbol: " + symbol.get(i).toString().toUpperCase());
 
                         stockQuoteUrl = new URL("http://dev.markitondemand.com/MODApis/Api/v2/Quote/json/?symbol=" + symbol.get(i).toString().toUpperCase());
@@ -273,7 +238,6 @@ public class RefreshService extends IntentService {
 
                         JSONObject stockObject = new JSONObject(response);
                         System.out.println("THE STOCK: " + stockObject.toString());
-                        //writeToFile(stockObject.toString());
                         finalresponse= finalresponse+stockObject.toString();
                         Log.d("Saved stock data", stockObject.toString());
                         temp = i + 1;
@@ -289,16 +253,10 @@ public class RefreshService extends IntentService {
                 finalresponse=finalresponse+"]";
                 System.out.println("What it should be: "+finalresponse);
                 writeToFile(finalresponse);
-                //System.out.println("WROTE 2");
 
-
-                //
             }
         };
         t.start();
-
-        //writeToFile("]");
-        //System.out.println("FINAL:" + readFromFile());
 
     }
 
@@ -317,9 +275,6 @@ public class RefreshService extends IntentService {
             fOut.flush();
             fOut.close();
 
-            /*FileOutputStream outputStreamWriter = this.openFileOutput("config.txt", Context.MODE_PRIVATE);
-            outputStreamWriter.write(data);
-            outputStreamWriter.close();*/
         } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }

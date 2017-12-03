@@ -70,22 +70,13 @@ public class MainActivity extends AppCompatActivity implements NavFragment.NavIn
 
         Bundle bundle = new Bundle();
         bundle.putString("newStock", "");
-        //NavFragment fragobj = new NavFragment();
-        //nav.setArguments(bundle);
-
-        /*Intent intent = new Intent(MainActivity.this,RS.getClass());
-        startService(intent);
-        bindService(intent, connection, Context.BIND_ADJUST_WITH_ACTIVITY | Context.BIND_AUTO_CREATE);
-        System.out.println("Service Bound");*/
 
         //  Determine if only one or two panes are visible
         twoPanes = (findViewById(R.id.fragment_details) != null);
 
         System.out.println(twoPanes);
         System.out.println(twoPanes);
-        //  Load navigation fragment by default
-        //NavFragment nav = new NavFragment();
-        //FragmentManager fragmentManager = getFragmentManager();
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.fragment_nav, nav);
         nav.setArguments(bundle);
@@ -135,88 +126,12 @@ public class MainActivity extends AppCompatActivity implements NavFragment.NavIn
             }
         }
 
-        //Intent stockQuoteIntent = new Intent(MainActivity.this, RS.getClass());
-        //stockQuoteIntent.putExtra("stock_symbols", listItems);
-       // startService(stockQuoteIntent);
 
         System.out.println("Mark: "+listItems.isEmpty());
 
             System.out.println("LOOP IS ENABLED");
-            /*ha.postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-
-                    // should be loop for every 60 seconds, don't forget if null
-                    if(!listItems.isEmpty()) {
-                        RS.setSymbol(listItems);
-                        System.out.println("Updated");
-                    }
-                    ha.postDelayed(this, 20000);
-                }
-            }, 20000);*/
-
-        /*final List li=listItems;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                while (true) {
-                    try {
-                        System.out.println("LOOP Running");
-                        Thread.sleep(60000);
-                        System.out.println("LOOP Running2");
-                        mHandler.post(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                // TODO Auto-generated method stub
-                                System.out.println("list item: "+listItems);
-
-                                System.out.println("list itemS: "+li);
-                                //System.out.println("Currently in RS: "+RS.getterSymbol());
-                                //RS.setSymbol(RS.getterSymbol());
-                                RS.go();
-                                //RS.timedL();
-                                System.out.println("Updated");
-                                Toast.makeText(getApplicationContext(), getString(R.string.up),
-                                        Toast.LENGTH_SHORT).show();
-                                // Write your code here to update the UI.
-                            }
-                        });
-                    } catch (Exception e) {
-                        // TODO: handle exception
-                    }
-                }
-            }
-        }).start();*/
-
-
-
     }
 
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.switch_fragments) {
-            //  Only display switch action if in single pane mode
-            if (!twoPanes) {
-                doTransition();
-            } else {
-                Toast.makeText(MainActivity.this, "Action Disabled", Toast.LENGTH_SHORT).show();
-            }
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
 
     @Override
     public void onStart(){
@@ -246,19 +161,7 @@ public class MainActivity extends AppCompatActivity implements NavFragment.NavIn
         }
     };
 
-    /*@Override
-    public void onPause(){
-        System.out.println("Pause Connection: "+connected);
-        if(connected){
 
-            unbindService(connection);
-
-        }
-
-        //Intent intent = new Intent(MainActivity.this,RefreshService.class);
-        //bindService(intent, connection, Context.BIND_ADJUST_WITH_ACTIVITY | Context.BIND_AUTO_CREATE);
-        super.onPause();
-    }*/
 
     @Override
     public void onStop(){
@@ -266,44 +169,9 @@ public class MainActivity extends AppCompatActivity implements NavFragment.NavIn
         super.onStop();
         unbindService(connection);
 
-
-        //Intent intent = new Intent(MainActivity.this,RefreshService.class);
-        //bindService(intent, connection, Context.BIND_ADJUST_WITH_ACTIVITY | Context.BIND_AUTO_CREATE);
-
     }
 
-   /* @Override
-    public void onResume(){
-        System.out.println("Resume Connection: "+connected);
-        if(connected){
 
-
-        }
-        else{
-            Intent intent = new Intent(MainActivity.this,RefreshService.class);
-            bindService(intent, connection, Context.BIND_ADJUST_WITH_ACTIVITY | Context.BIND_AUTO_CREATE);
-        }
-
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroy(){
-        System.out.println("Connection: "+connected);
-        if(connected){
-            System.out.println("Unbound");
-            System.out.println("Unbound");
-            System.out.println("Unbound");
-            System.out.println("Unbound");
-            System.out.println("Unbound");
-            unbindService(connection);
-       }
-        System.out.println("NOOOOO");
-        System.out.println("NOOOOO");
-        System.out.println("NOOOOO");
-        System.out.println("NOOOOO");
-        super.onDestroy();
-    }*/
 
     private void doTransition(){
         getFragmentManager()
@@ -315,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements NavFragment.NavIn
 
     public void updateL(String message){
         if (listItems.contains(message.toLowerCase())) {
-            //listItems.add(temp);
+
         }
         else if(listItems.contains(message.toUpperCase())){
 
@@ -326,51 +194,29 @@ public class MainActivity extends AppCompatActivity implements NavFragment.NavIn
         else{
             listItems.add(message);
             RS.setter(listItems);
-            //listItems.n
-            //listItems.notifyAll();
+
         }
-        //listItems.add(message);
+
         System.out.println("THE List Items: "+listItems);
     }
 
-    public List getL(){
-        return listItems;
-    }
 
 
     public void acceptMessage(String message, int pos) throws JSONException {
         System.out.println("From Activity:  "+message);
-        /*if (listItems.contains(message.toLowerCase())) {
-            //listItems.add(temp);
-        }
-        else if(listItems.contains(message.toUpperCase())){
 
-        }
-        else if(listItems.contains(message)){
-
-        }
-        else{
-            listItems.add(message);
-        }*/
-        //listItems.add(message);
-        //get detail to set that information
         DetailsFragment receiver= new DetailsFragment();
 
         if (!twoPanes) {
             getFragmentManager()
                     .beginTransaction()
-                    // .add(R.id.fragment_details, receiver)
                     .replace(R.id.fragment_nav, receiver)
                     .addToBackStack(null)
                     .commit();
             getFragmentManager()
                     .executePendingTransactions();
 
-
-            //Intent stockQuoteIntent = new Intent(MainActivity.this, RefreshService.class);
-            //stockQuoteIntent.putStringArrayListExtra("stock_symbols", listItems);
             System.out.println("THE MARK 3");
-            //S.setSymbol(listItems);
             receiver.setMessage(message, pos, con);
         }
         else{

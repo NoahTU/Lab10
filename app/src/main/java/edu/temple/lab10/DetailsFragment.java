@@ -57,15 +57,12 @@ public class DetailsFragment extends Fragment {
 
         textView=  (TextView)RootView.findViewById(R.id.details);
 
-        /*new DownloadImageTask((ImageView) RootView.findViewById(R.id.imageView)).execute("https://finance.google.com/finance/getchart?p=5d&q="+sy);
-        textView.setText(name+"\n$"+price);*/
 
         return RootView;
     }
 
     void setMessage(String message, int ppos, Context c) throws JSONException {
 
-        //System.out.println("End?: "+message);
 
         te=c;
 
@@ -85,40 +82,6 @@ public class DetailsFragment extends Fragment {
     }
 
     public String readFromFile() {
-
-        /*String ret = "";
-
-        try {
-
-            File mFolder = new File("/data/user/0/edu.temple.lab10/files");
-            File imgFile = new File(mFolder.getAbsolutePath() + "/config.txt");
-            InputStream inputStream = getContext().openFileInput("config.txt");
-
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(imgFile));
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append(receiveString);
-                }
-
-                inputStream.close();
-                ret = stringBuilder.toString();
-            }
-        }
-        catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
-        }
-
-        System.out.println("The String: "+ret);
-        return ret;*/
-
-
-
         String ret = "";
 
         try {
