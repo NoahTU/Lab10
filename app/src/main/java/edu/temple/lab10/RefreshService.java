@@ -3,7 +3,11 @@ package edu.temple.lab10;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
+import android.os.Handler;
+import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -18,6 +22,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static java.security.AccessController.getContext;
 
@@ -29,17 +36,116 @@ public class RefreshService extends IntentService {
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
-    ArrayList<String> symbol;
+    //List symbol;
+    List<String> symbol= Collections.synchronizedList(new ArrayList<String>());
 
-    public void setSymbol(ArrayList<String> s) {
-        this.symbol = s;
+    Handler mHandler = new Handler();
+
+    private final IBinder refreshBinder = new refreshBinder();
+
+    public void setSymbol(List s) {
+        symbol = s;
+        //System.out.println("THE MARK 5");
+        getQuote(symbol);
+
+    }
+
+    public void settSymbol(List s) {
+        symbol = s;
+        //System.out.println("THE MARK 5");
+        gettQuote(symbol);
+
+    }
+    public void go() {
+        System.out.println("Currently in RS: "+symbol);
+        getQuote(symbol);
+        //System.out.println("THE MARK 5");
+        // getQuote(symbol);
+
+    }
+
+    public void setter(List s) {
+        symbol = s;
+        System.out.println("THE LIST Items: "+symbol);
+        //System.out.println("THE MARK 5");
+       // getQuote(symbol);
+
+    }
+    public List getterSymbol() {
+        return symbol;
+
+    }
+
+    public class refreshBinder extends Binder {
+        RefreshService getService(){
+            return RefreshService.this;
+        }
+    }
+
+
+    @Override
+    public IBinder onBind(Intent intent){
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                while (true) {
+                    try {
+                        System.out.println("LOOP Running");
+                        //System.out.println("What you COULD BE WRITING: "+readFromFile());
+                        //final List te= readFromFile().toL
+                        Thread.sleep(60000);
+                        String s1=readFromFile();
+                        System.out.println("What's RUNNING: "+s1);
+
+                        String replace = s1.replace("[","");
+                        //System.out.println(replace);
+                        String replace1 = replace.replace("]","");
+                        //System.out.println(replace1);
+                        final List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(",")));
+                        System.out.println("THE FINAL STRING:"+myList.toString());
+                        System.out.println("LOOP Running2");
+                        mHandler.post(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // TODO Auto-generated method stub
+                                System.out.println("list item: "+myList);
+
+                                //System.out.println("list itemS: "+);
+                                //System.out.println("Currently in RS: "+RS.getterSymbol());
+                                //RS.setSymbol(RS.getterSymbol());
+                                settSymbol(myList);
+                                // go();
+                                //RS.timedL();
+                                System.out.println("Updated");
+                                //Toast.makeText(getApplicationContext(), getString(R.string.up), Toast.LENGTH_SHORT).show();
+                                // Write your code here to update the UI.
+                            }
+                        });
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                }
+            }
+        }).start();
+
+        return refreshBinder;
+    }
+
+    public void timedL() {
+
         //System.out.println("THE MARK 5");
         getQuote(symbol);
 
     }
 
     public RefreshService() {
+
         super("RefreshService");
+        System.out.println("yo");
+        //watch();
     }
 
     @Override
@@ -52,10 +158,86 @@ public class RefreshService extends IntentService {
     }
 
 
-    public void getQuote(final ArrayList<String> symbol) {
+    public void gettQuote(final List symbol) {
 
         //URL stockQuoteUrl;
-        System.out.println("THE MARK 1");
+        //System.out.println("THE MARK 1");
+
+        writeToFile("[");
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                URL stockQuoteUrl;
+                //writeToFile("[");
+                int temp = 0;
+                String finalresponse="[";
+                String t="";
+                for (int i = 0; i < symbol.size(); i++) {
+
+                    try {
+                        //System.out.println(symbol[i]);
+                        if (i == 0) {
+                            System.out.println("Current Symbol: " + symbol.get(i).toString().toUpperCase());
+                            t=symbol.get(i).toString().toUpperCase();
+                            //writeToFile("[");
+                            //System.out.println("WROTE 1");
+                        }
+                        else{
+                            System.out.println("Current Symbol: " + symbol.get(i).toString().toUpperCase().substring(1));
+                            t=symbol.get(i).toString().toUpperCase().substring(1);
+                        }
+                        //System.out.println("Current Symbol: " + symbol.get(i).toString().toUpperCase().substring(1));
+
+                        stockQuoteUrl = new URL("http://dev.markitondemand.com/MODApis/Api/v2/Quote/json/?symbol=" + t);
+
+                        BufferedReader reader = new BufferedReader(
+                                new InputStreamReader(
+                                        stockQuoteUrl.openStream()));
+
+                        String response = "", tmpResponse;
+
+                        tmpResponse = reader.readLine();
+                        while (tmpResponse != null) {
+                            response = response + tmpResponse;
+                            tmpResponse = reader.readLine();
+                        }
+
+                        JSONObject stockObject = new JSONObject(response);
+                        System.out.println("THE STOCK: " + stockObject.toString());
+                        //writeToFile(stockObject.toString());
+                        finalresponse= finalresponse+stockObject.toString();
+                        Log.d("Saved stock data", stockObject.toString());
+                        temp = i + 1;
+                        if (temp < symbol.size()) {
+                            finalresponse=finalresponse+",";
+                            System.out.println("WROTE MORE");
+                            //writeToFile(",");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                finalresponse=finalresponse+"]";
+                System.out.println("What it should be: "+finalresponse);
+                writeToFile(finalresponse);
+                //System.out.println("WROTE 2");
+
+
+                //
+            }
+        };
+        t.start();
+
+        //writeToFile("]");
+        //System.out.println("FINAL:" + readFromFile());
+
+    }
+
+
+    public void getQuote(final List symbol) {
+
+        //URL stockQuoteUrl;
+        //System.out.println("THE MARK 1");
 
         writeToFile("[");
         Thread t = new Thread() {
@@ -73,9 +255,9 @@ public class RefreshService extends IntentService {
                             //writeToFile("[");
                             //System.out.println("WROTE 1");
                         }
-                        System.out.println("Current Symbol: " + symbol.get(i).toUpperCase());
+                        System.out.println("Current Symbol: " + symbol.get(i).toString().toUpperCase());
 
-                        stockQuoteUrl = new URL("http://dev.markitondemand.com/MODApis/Api/v2/Quote/json/?symbol=" + symbol.get(i).toUpperCase());
+                        stockQuoteUrl = new URL("http://dev.markitondemand.com/MODApis/Api/v2/Quote/json/?symbol=" + symbol.get(i).toString().toUpperCase());
 
                         BufferedReader reader = new BufferedReader(
                                 new InputStreamReader(
@@ -149,32 +331,34 @@ public class RefreshService extends IntentService {
         String ret = "";
 
         try {
+            InputStream inputStream = getApplicationContext().openFileInput("configg.txt");
 
-            File mFolder = new File("/data/user/0/edu.temple.lab10/files");
-            File imgFile = new File(mFolder.getAbsolutePath() + "/config.txt");
-           InputStream inputStream = this.openFileInput("config.txt");
-
-            if (inputStream != null) {
+            if ( inputStream != null ) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(imgFile));
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 String receiveString = "";
                 StringBuilder stringBuilder = new StringBuilder();
 
-                while ((receiveString = bufferedReader.readLine()) != null) {
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
                     stringBuilder.append(receiveString);
                 }
 
                 inputStream.close();
                 ret = stringBuilder.toString();
             }
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             Log.e("login activity", "File not found: " + e.toString());
         } catch (IOException e) {
             Log.e("login activity", "Can not read file: " + e.toString());
         }
 
-        System.out.println("The String: " + ret);
         return ret;
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

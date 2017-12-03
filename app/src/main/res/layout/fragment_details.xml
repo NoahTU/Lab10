@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
     <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="Details of items selected from\nthe navigation fragment\nwould go here.\nIt should have a default display."
+        android:text="@string/empty_details"
         android:id="@+id/details"
         android:layout_below="@+id/imageView" />
 

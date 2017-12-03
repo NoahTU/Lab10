@@ -65,7 +65,7 @@ public class DetailsFragment extends Fragment {
 
     void setMessage(String message, int ppos, Context c) throws JSONException {
 
-        System.out.println("End?: "+message);
+        //System.out.println("End?: "+message);
 
         te=c;
 
@@ -77,7 +77,7 @@ public class DetailsFragment extends Fragment {
         sy= company.optString("Symbol");
 
         new DownloadImageTask(ImageView).execute("https://finance.google.com/finance/getchart?p=5d&q="+sy);
-        textView.setText(name+"\n$"+price);
+        textView.setText(getString(R.string.namaeh)+" "+name+"\n"+getString(R.string.pri)+" $"+price);
 
 
         //json functions

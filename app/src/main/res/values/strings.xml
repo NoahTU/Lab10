@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Lab10</string>
-    <string name="empty_list">empty</string>
+    <string name="empty_list">Empty list, press the pink action button to add stocks.</string>
+    <string name="empty_details">No Stock Data Selected</string>
+    <string name="pri">Price: </string>
+    <string name="namaeh">Name: </string>
+    <string name="dial">Type Your Stock: </string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="up">Updated</string>
 </resources>

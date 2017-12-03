@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lab10</string>
+    <string name="empty_details">No Hay Datos De Stock Seleccionados</string>
+    <string name="empty_list">Lista vacía, presione el botón de acción rosa para agregar acciones.</string>
+    <string name="pri">Precio: </string>
+    <string name="namaeh">Nombre: </string>
+    <string name="dial">Escriba su inventario: </string>
+    <string name="ok">De acuerdo</string>
+    <string name="cancel">Cancelar</string>
+    <string name="up">Actualizado</string>
+</resources>
